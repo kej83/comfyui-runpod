@@ -2,11 +2,14 @@ FROM nvidia/cuda:12.1.1-cudnn8-runtime-ubuntu22.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-RUN apt update && \
+RUN apt-get update && \
+    apt-get install -y software-properties-common && \
+    add-apt-repository ppa:deadsnakes/ppa && \
+    apt-get update && \
     apt install -y python3.10 python3.10-venv python3.10-dev curl git psmisc openssh-client cloudflared && \
     ln -sf python3.10 /usr/bin/python3 && \
     rm -rf /var/lib/apt/lists/*
-
+    
 WORKDIR /workspace
 
 RUN git clone https://github.com/comfyanonymous/ComfyUI
