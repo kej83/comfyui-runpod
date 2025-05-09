@@ -4,13 +4,17 @@ ENV DEBIAN_FRONTEND=noninteractive
 WORKDIR /workspace
 
 # Install dependencies
-RUN apt-get update && apt-get install -y \
-    python3.10 python3.10-venv python3.10-dev \
-    curl git psmisc openssh-client cloudflared \
-    wget unzip build-essential && \
+RUN apt-get update && \
+    apt-get install -y software-properties-common && \
+    add-apt-repository ppa:deadsnakes/ppa && \
+    apt-get update && \
+    apt-get install -y \
+        python3.10 python3.10-venv python3.10-dev \
+        curl git psmisc openssh-client cloudflared \
+        wget unzip build-essential && \
     ln -sf python3.10 /usr/bin/python3 && \
     rm -rf /var/lib/apt/lists/*
-
+    
 # Set up ComfyUI
 RUN git clone https://github.com/comfyanonymous/ComfyUI
 WORKDIR /workspace/ComfyUI
