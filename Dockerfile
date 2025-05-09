@@ -3,17 +3,26 @@ FROM python:3.10-slim
 ENV DEBIAN_FRONTEND=noninteractive
 WORKDIR /workspace
 
-# Install dependencies
+# Install system dependencies (safe for GitHub Actions)
 RUN apt-get update && apt-get install -y \
-    git curl psmisc openssh-client cloudflared \
-    wget unzip build-essential && \
-    rm -rf /var/lib/apt/lists/*
+    apt-transport-https \
+    ca-certificates \
+    gnupg \
+    curl \
+    wget \
+    unzip \
+    git \
+    build-essential \
+    psmisc \
+    openssh-client \
+    cloudflared \
+    && rm -rf /var/lib/apt/lists/*
 
-# Clone and setup ComfyUI
+# Clone and set up ComfyUI
 RUN git clone https://github.com/comfyanonymous/ComfyUI /workspace/ComfyUI
 WORKDIR /workspace/ComfyUI
 
-# Set up virtualenv and install packages
+# Set up virtual environment and install Python packages
 RUN python -m venv venv && \
     . venv/bin/activate && \
     python -m pip install --upgrade pip && \
@@ -38,7 +47,7 @@ RUN cd /workspace/ComfyUI/custom_nodes && \
     . /workspace/ComfyUI/venv/bin/activate && \
     pip install -r requirements.txt
 
-# Add your scripts
+# Add scripts
 COPY start.sh /workspace/start.sh
 COPY launch.sh /workspace/launch.sh
 COPY Download_Models.py /workspace/Download_Models.py
