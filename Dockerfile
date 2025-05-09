@@ -3,7 +3,7 @@ FROM python:3.10-slim
 ENV DEBIAN_FRONTEND=noninteractive
 WORKDIR /workspace
 
-# Install system dependencies (safe for GitHub Actions)
+# Install system dependencies (no cloudflared here)
 RUN apt-get update && apt-get install -y \
     apt-transport-https \
     ca-certificates \
@@ -15,9 +15,13 @@ RUN apt-get update && apt-get install -y \
     build-essential \
     psmisc \
     openssh-client \
-    cloudflared \
     && rm -rf /var/lib/apt/lists/*
 
+# Manually install cloudflared
+RUN curl -L https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64 \
+    -o /usr/local/bin/cloudflared && \
+    chmod +x /usr/local/bin/cloudflared
+    
 # Clone and set up ComfyUI
 RUN git clone https://github.com/comfyanonymous/ComfyUI /workspace/ComfyUI
 WORKDIR /workspace/ComfyUI
