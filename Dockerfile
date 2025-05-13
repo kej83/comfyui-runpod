@@ -55,7 +55,7 @@ COPY start.sh /workspace/start.sh
 COPY launch.sh /workspace/launch.sh
 COPY Download_Models.py /workspace/Download_Models.py
 
-RUN chmod +x /workspace/start.sh /workspace/launch.sh
+RUN chmod +x /workspace/start.sh
 
 # ❌ Removed model download step to avoid bloat
 # RUN . venv/bin/activate && python /workspace/Download_Models.py || echo "Skipping model download."
