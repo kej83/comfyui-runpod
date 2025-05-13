@@ -17,34 +17,30 @@ RUN apt-get update && apt-get install -y \
     openssh-client \
     && rm -rf /var/lib/apt/lists/*
 
+# Optional: accept HF token (but DO NOT use it during build)
 ARG HF_TOKEN
 ENV HF_TOKEN=$HF_TOKEN
+ENV HF_HUB_ENABLE_HF_TRANSFER=1
 
-# Manually install cloudflared
-RUN curl -L https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64 \
-    -o /usr/local/bin/cloudflared && \
-    chmod +x /usr/local/bin/cloudflared
-    
-# Clone and set up ComfyUI
+# Clone ComfyUI
 RUN git clone https://github.com/comfyanonymous/ComfyUI /workspace/ComfyUI
+
 WORKDIR /workspace/ComfyUI
 
-# Set up virtual environment and install Python packages
+# Python environment and dependencies
 RUN python -m venv venv && \
     . venv/bin/activate && \
     python -m pip install --upgrade pip && \
     pip install -r requirements.txt && \
     pip uninstall -y torch torchvision torchaudio && \
     pip install --pre torch==2.7.0.dev20250311 torchvision torchaudio \
-  --index-url https://download.pytorch.org/whl/nightly/cu128 && \
+      --index-url https://download.pytorch.org/whl/nightly/cu128 && \
     pip install \
         https://huggingface.co/MonsterMMORPG/SECourses_Premium_Flash_Attention/resolve/main/flash_attn-2.7.4.post1-cp310-cp310-linux_x86_64.whl \
         https://huggingface.co/MonsterMMORPG/SECourses_Premium_Flash_Attention/resolve/main/sageattention-2.1.1-cp310-cp310-linux_x86_64.whl && \
     pip install insightface onnxruntime-gpu triton piexif deepspeed requests hf_transfer huggingface_hub accelerate
 
-ENV HF_HUB_ENABLE_HF_TRANSFER=1
-
-# Install custom nodes
+# Custom nodes
 RUN cd /workspace/ComfyUI/custom_nodes && \
     git clone https://github.com/ltdrdata/ComfyUI-Manager && \
     git clone https://github.com/cubiq/ComfyUI_IPAdapter_plus && \
@@ -60,7 +56,9 @@ COPY launch.sh /workspace/launch.sh
 COPY Download_Models.py /workspace/Download_Models.py
 
 RUN chmod +x /workspace/start.sh /workspace/launch.sh
-RUN . venv/bin/activate && python /workspace/Download_Models.py || echo "Skipping model download."
+
+# ❌ Removed model download step to avoid bloat
+# RUN . venv/bin/activate && python /workspace/Download_Models.py || echo "Skipping model download."
 
 EXPOSE 8188
 CMD ["bash", "/workspace/start.sh"]
