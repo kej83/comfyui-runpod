@@ -32,12 +32,8 @@ RUN python -m venv venv && \
     . venv/bin/activate && \
     python -m pip install --upgrade pip && \
     pip install -r requirements.txt && \
-    pip uninstall -y torch torchvision torchaudio && \
-    pip install --pre torch==2.7.0.dev20250311 torchvision torchaudio \
-      --index-url https://download.pytorch.org/whl/nightly/cu121 && \
-    pip install \
-        https://huggingface.co/MonsterMMORPG/SECourses_Premium_Flash_Attention/resolve/main/flash_attn-2.7.4.post1-cp310-cp310-linux_x86_64.whl \
-        https://huggingface.co/MonsterMMORPG/SECourses_Premium_Flash_Attention/resolve/main/sageattention-2.1.1-cp310-cp310-linux_x86_64.whl && \
+    pip uninstall -y torch torchvision xformers torchaudio && \
+    pip install torch==2.7.0 torchvision torchaudio --index-url https://download.pytorch.org/whl/cu128 && \
     pip install insightface onnxruntime-gpu triton piexif deepspeed requests hf_transfer huggingface_hub accelerate
 
 # Custom nodes
@@ -52,7 +48,6 @@ RUN cd /workspace/ComfyUI/custom_nodes && \
 
 # Add scripts
 COPY start.sh /workspace/start.sh
-COPY launch.sh /workspace/launch.sh
 COPY Download_Models.py /workspace/Download_Models.py
 
 RUN chmod +x /workspace/start.sh
