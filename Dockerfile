@@ -17,6 +17,9 @@ RUN apt-get update && apt-get install -y \
     openssh-client \
     && rm -rf /var/lib/apt/lists/*
 
+ARG HF_TOKEN
+ENV HF_TOKEN=$HF_TOKEN
+
 # Manually install cloudflared
 RUN curl -L https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64 \
     -o /usr/local/bin/cloudflared && \
