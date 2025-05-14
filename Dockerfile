@@ -42,9 +42,10 @@ RUN cd /workspace/ComfyUI/custom_nodes && \
     git clone https://github.com/rgthree/rgthree-comfy && \
     git clone --recursive https://github.com/ssitu/ComfyUI_UltimateSDUpscale && \
     git clone https://github.com/ltdrdata/ComfyUI-Impact-Pack comfyui-impact-pack && \
-    ./venv/bin/pip install -r comfyui-impact-pack/requirements.txt && \
+    /workspace/ComfyUI/venv/bin/pip install -r comfyui-impact-pack/requirements.txt && \
     git clone https://github.com/ltdrdata/ComfyUI-Impact-Subpack && \
-    ./venv/bin/pip install -r ComfyUI-Impact-Subpack/requirements.txt
+    /workspace/ComfyUI/venv/bin/pip install -r ComfyUI-Impact-Subpack/requirements.txt
+
 
 # Add scripts
 COPY start.sh /workspace/start.sh
