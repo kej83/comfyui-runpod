@@ -29,12 +29,11 @@ WORKDIR /workspace/ComfyUI
 
 # Python environment and dependencies
 RUN python -m venv venv && \
-    . venv/bin/activate && \
-    python -m pip install --upgrade pip && \
-    pip install -r requirements.txt && \
-    pip uninstall -y torch torchvision xformers torchaudio && \
-    pip install torch==2.7.0 torchvision torchaudio --index-url https://download.pytorch.org/whl/cu128 && \
-    pip install insightface onnxruntime-gpu triton piexif deepspeed requests hf_transfer huggingface_hub accelerate
+    ./venv/bin/pip install --upgrade pip && \
+    ./venv/bin/pip install -r requirements.txt && \
+    ./venv/bin/pip uninstall -y torch torchvision xformers torchaudio && \
+    ./venv/bin/pip install torch==2.7.0 torchvision torchaudio --index-url https://download.pytorch.org/whl/cu128 && \
+    ./venv/bin/pip install insightface onnxruntime-gpu triton piexif deepspeed requests hf_transfer huggingface_hub accelerate
 
 # Custom nodes
 RUN cd /workspace/ComfyUI/custom_nodes && \
@@ -43,23 +42,15 @@ RUN cd /workspace/ComfyUI/custom_nodes && \
     git clone https://github.com/rgthree/rgthree-comfy && \
     git clone --recursive https://github.com/ssitu/ComfyUI_UltimateSDUpscale && \
     git clone https://github.com/ltdrdata/ComfyUI-Impact-Pack comfyui-impact-pack && \
-    cd comfyui-impact-pack && \
-    . /workspace/ComfyUI/venv/bin/activate && \
-    pip install -r requirements.txt && \
-    python install.py && \
-    cd /workspace/ComfyUI/custom_nodes && \
+    ./venv/bin/pip install -r comfyui-impact-pack/requirements.txt && \
     git clone https://github.com/ltdrdata/ComfyUI-Impact-Subpack && \
-    cd ComfyUI-Impact-Subpack && \
-    pip install -r requirements.txt
+    ./venv/bin/pip install -r ComfyUI-Impact-Subpack/requirements.txt
 
 # Add scripts
 COPY start.sh /workspace/start.sh
 COPY Download_Models.py /workspace/Download_Models.py
 
 RUN chmod +x /workspace/start.sh
-
-# ❌ Removed model download step to avoid bloat
-# RUN . venv/bin/activate && python /workspace/Download_Models.py || echo "Skipping model download."
 
 EXPOSE 8188
 CMD ["bash", "/workspace/start.sh"]
