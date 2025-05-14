@@ -46,6 +46,7 @@ RUN cd /workspace/ComfyUI/custom_nodes && \
     cd comfyui-impact-pack && \
     . /workspace/ComfyUI/venv/bin/activate && \
     pip install -r requirements.txt && \
+    python install.py && \
     cd /workspace/ComfyUI/custom_nodes && \
     git clone https://github.com/ltdrdata/ComfyUI-Impact-Subpack && \
     cd ComfyUI-Impact-Subpack && \
