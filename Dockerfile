@@ -40,10 +40,15 @@ RUN python -m venv venv && \
 RUN cd /workspace/ComfyUI/custom_nodes && \
     git clone https://github.com/ltdrdata/ComfyUI-Manager && \
     git clone https://github.com/cubiq/ComfyUI_IPAdapter_plus && \
+    git clone https://github.com/rgthree/rgthree-comfy && \
     git clone --recursive https://github.com/ssitu/ComfyUI_UltimateSDUpscale && \
     git clone https://github.com/ltdrdata/ComfyUI-Impact-Pack comfyui-impact-pack && \
     cd comfyui-impact-pack && \
     . /workspace/ComfyUI/venv/bin/activate && \
+    pip install -r requirements.txt && \
+    cd /workspace/ComfyUI/custom_nodes && \
+    git clone https://github.com/ltdrdata/ComfyUI-Impact-Subpack && \
+    cd ComfyUI-Impact-Subpack && \
     pip install -r requirements.txt
 
 # Add scripts
